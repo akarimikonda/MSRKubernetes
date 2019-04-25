@@ -1,0 +1,35 @@
+https://bit.ly/2Ul76nV
+
+1.Kubernetes Cluster (1master and 2 workers) setup was built on Google Cloud Centos VMS
+2.Tomcat server with sample war file deployement is done. Respective files are Dockerfile | sample.war | msrwebapprcdemo.yaml
+3.I didnt get chance to implement load balancer, so i exposed the webapp to Node port. 
+4.Mongodb database was setup and exposed via node port only.
+5.These can be accessed by outside world via node port
+6.Used replica sets
+
+When ever you want test the environment, please schedule a meeting. So I will start the instances and i can also help you
+with private key and username - so you can login and test it out.
+
+Below is the output generated for your reference 
+[root@k8master deployment]# kubectl get pods -l role=mongo -o wide && echo && kubectl get svc && echo && kubectl get pvc
+NAME      READY   STATUS    RESTARTS   AGE   IP            NODE        NOMINATED NODE   READINESS GATES
+mongo-0   2/2     Running   0          48m   10.244.1.11   k8worker1   <none>           <none>
+mongo-1   2/2     Running   0          48m   10.244.2.9    k8worker2   <none>           <none>
+
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP     27h
+mongo        ClusterIP   None         <none>        27017/TCP   48m
+
+NAME                STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS    AGE
+mongo-ssd-mongo-0   Bound    mongo-ssd    7Gi        RWO            local-storage   48m
+mongo-ssd-mongo-1   Bound    mongo-ssd1   7Gi        RWO            local-storage   48m
+
+[root@k8master deployment]# kubectl get rs
+NAME              DESIRED   CURRENT   READY   AGE
+msrwebapprcdemo   2         2         2       18h
+[root@k8master deployment]# kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+mongo-0                 2/2     Running   0          50m
+mongo-1                 2/2     Running   0          50m
+msrwebapprcdemo-m9gh6   1/1     Running   4          18h
+msrwebapprcdemo-wgm2q   1/1     Running   4          18h
